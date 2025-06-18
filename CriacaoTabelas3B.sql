@@ -1,0 +1,47 @@
+CREATE DATABASE Biblioteca3B;
+
+CREATE TABLE Autor(
+IdAutor SMALLINT IDENTITY, 
+NomeAutor VARCHAR(50)NOT NULL,
+SobrenomeAutor VARCHAR(70)NOT NULL,
+CONSTRAINT pk_id_autor PRIMARY KEY(IdAutor)
+);
+sp_help Autor;
+
+CREATE TABlE Assunto(
+IdAssunto TINYINT PRIMARY KEY IDENTITY,
+NomeAssunto VARCHAR(30)NOT NULL
+);
+sp_help Assunto;
+
+CREATE TABLE Editora(
+IdEditora TINYINT PRIMARY KEY IDENTITY,
+NomeEditora VARCHAR(40)NOT NULL
+);
+
+CREATE TABLE Livro (
+IdLivro SMALLINT NOT NULL PRIMARY KEY IDENTITY(100,1),
+NomeLivro VARCHAR (70) NOT NULL,
+ISBN13 CHAR (13) UNIQUE NOT NULL,
+DataPub DATE,
+PrecoLivro MONEY NOT NULL,
+NumeroDePaginas SMALLINT NOT NULL,
+IdEditora TINYINT NOT NULL,
+IdAssunto TINYINT NOT NULL,
+CONSTRAINT fk_id_editora FOREIGN KEY(IdEditora)
+	REFERENCES Editora(IdEditora) ON DELETE CASCADE,
+CONSTRAINT fk_id_assunto FOREIGN KEY(IdAssunto)
+	REFERENCES Assunto(IdAssunto) ON DELETE CASCADE,
+CONSTRAINT verifica_preco CHECK(precoLivro >=0)
+);
+
+
+CREATE TABLE LivroAutor(
+IdLivro SMALLINT NOT NULL,
+IdAutor SMALLINT NOT NULL,
+CONSTRAINT fk_id_livro FOREIGN KEY (IdLivro)
+	REFERENCES Livro(IdLivro),
+CONSTRAINT fk_id_autor FOREIGN KEY (IdAutor)
+	REFERENCES Autor(IdAutor),
+CONSTRAINT pk_livro_autor PRIMARY KEY (IdLivro, IdAutor)
+);
